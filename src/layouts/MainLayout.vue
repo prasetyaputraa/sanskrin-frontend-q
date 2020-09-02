@@ -65,7 +65,7 @@ const linksData = [
   },
   {
     title: 'Methods',
-    caption: 'Methodologies yang digunakan',
+    caption: 'Methodologi yang digunakan',
     icon: 'calculate',
     link: '/#/methodologies'
   }

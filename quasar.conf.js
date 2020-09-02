@@ -19,7 +19,12 @@ module.exports = function (/* ctx */) {
     // --> boot files are part of "main.js"
     // https://quasar.dev/quasar-cli/boot-files
     boot: [
+      // only add this 'color-operations' if succeed
+      // already at making quasar components
+      // accepting hex value for color properties
 
+      'color-operations',
+      'percentage-colors'
     ],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
