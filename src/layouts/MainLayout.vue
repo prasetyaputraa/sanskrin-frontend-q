@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+    <q-header bordered class="bg-primary text-white">
       <q-toolbar>
         <q-btn
           flat
@@ -15,7 +15,7 @@
           Sanskrin
         </q-toolbar-title>
 
-        <div>Teknologi Informasi-Universitas Udayana 2020</div>
+        <div class="small-none">Teknologi Informasi-Universitas Udayana 2020</div>
         <!-- <div>Quasar v{{ $q.version }}</div> -->
       </q-toolbar>
     </q-header>

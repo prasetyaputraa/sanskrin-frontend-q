@@ -6,8 +6,19 @@
     icon="code"
     :label="word"
   >
+    <template v-slot:header>
+      <q-item-section class="col-xs-1 small-none">
+        <q-icon name="code" size="sm" class="text-grey icon-section"/>
+      </q-item-section>
+      <q-item-section style="margin-left: -8px; font-size: 1.25em" class="word-section">
+        {{word}}
+      </q-item-section>
+      <q-item-section class="flex justify-end pos-section">
+        <q-chip square size="md" color="grey" outline>{{wordChipData.sanskritWords[word].posTag}}</q-chip>
+      </q-item-section>
+    </template>
     <q-card class="sanskrit-words-dropdown">
-      <WordChip ref="wordchip" v-for="meaning in filterSemantics(wordChipData.sanskritWords[word])"
+      <WordChip ref="wordchip" v-for="meaning in filterSemantics(wordChipData.sanskritWords[word].meaning)"
         :key="meaning[0]" :word='meaning[0]' :percentage='meaning[1]' :occurence='meaning[2]'
       />
     </q-card>
@@ -66,10 +77,29 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  @media only screen and (max-width: 720px) {
+      .small-none {
+          display: none;
+      }
+
+      .word-section {
+        margin-left: 0 !important;
+      }
+
+      .sanskrit-words-dropdown {
+        padding-left: 2em !important;
+      }
+  }
+
   .sanskrit-words-dropdown {
     padding-top: 1em;
     padding-bottom: 1em;
 
     padding-left: 64px;
+  }
+
+  .pos-section {
+    flex-direction: row;
+    justify-content: flex-end !important;
   }
 </style>

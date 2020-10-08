@@ -1,8 +1,8 @@
 <template>
   <q-page class="">
     <div class="q-pa-lg fit row justify-center items-start q-col-gutter-sm">
-      <div class="col-xs-12 col-md-6 flex fit">
-        <q-card class="my-card fit">
+      <div class="col-xs-12 col-md-6 flex fit" style="padding: 0">
+        <q-card flat bordered class="my-card fit">
           <q-card-section style="padding-top: 2em">
             <div class="gutter-sm row justify-center">
               <q-input borderless type="textarea" class="col-md-6 col-sm-12 input-text-sanskrit" v-model="inputText" label="Kalimat dalam Sansekerta..." />
@@ -26,24 +26,25 @@
     <div class="q-pa-lg fit row items-start q-col-gutter-sm">
       <q-list bordered class="rounded-borders col-xs-12 col-lg-6">
         <div class="row fit justify-between items-center">
-          <div class="col-xs-6">
+          <div class="col-md-6">
             <div class="row fit justify-start">
               <h6 style="margin: 1em 1em 1em 1em">Distribusi Semantik</h6>
             </div>
           </div>
-          <div class="col-xs-6">
-            <div class="row fit justify-end q-gutter-xs">
-              <q-btn-toggle
+          <div class="col-md-6 small-fit">
+            <div class="row fit justify-end q-gutter-xs small-justify-center">
+              <q-btn-toggle unelevated no-caps style="border: 1px solid silver !important"
                 v-model="percentOccurenceToggle"
                 @input="handlePercentOccurenceToggle"
                 toggle-color="primary"
+                color="white"
                 text-color="primary"
                 :options="[
-                  {label: '# kemunculan', value: 'occurence'},
+                  {label: '# okurensi', value: 'occurence'},
                   {label: '% persentase', value: 'percentage'}
                 ]"
               />
-              <q-btn
+              <q-btn unelevated style="border: 1px solid silver !important"
                 :ripple="false"
                 size="md"
                 color="white"
@@ -147,33 +148,45 @@ export default {
       inputText: '',
       outputText: '',
       sanskritWords: {
-        Deava: [
-          ['dewa santuy', 100, 29],
-          ['dewa sanjuy', 35, 890],
-          ['dewa', 75, 908]
-        ],
-        Sanjaya: [
-          ['melihat dari jauh', 10, 1290]
-        ],
-        Subaru: [
-          ['anak dewa', 10, 122]
-        ],
-        Toyoya: [
-          ['anak dewa', 87, 1230]
-        ],
-        Snnyasii: [
-          ['melihat dari jauh', 10, 1290],
-          ['melihat dari kejaih', 10, 1202]
-        ],
-        Suzuka: [
-          ['anak dewa', 87, 809]
-        ],
-        Hondata: [
-          ['anak dewa', 87, 232]
-        ],
-        Yamaya: [
-          ['anak dewa', 87, 214]
-        ]
+        Deava: {
+          meaning: [
+            ['dewa santuy', 100, 29],
+            ['dewa sanjuy', 35, 890],
+            ['dewa', 75, 908]
+          ],
+          posTag: 'Noun'
+        },
+        Sanjaya: {
+          meaning: [
+            ['melihat dari jauh', 10, 1290]
+          ],
+          posTag: 'Adverb'
+        },
+        Subaru: {
+          meaning: [
+            ['anak dewa', 10, 122]
+          ],
+          posTag: 'Adjective'
+        },
+        Toyoya: {
+          meaning: [
+            ['anak dewa', 87, 1230]
+          ],
+          posTag: 'Adverb'
+        },
+        Snnyasii: {
+          meaning: [
+            ['melihat dari jauh', 10, 1290],
+            ['melihat dari kejaih', 10, 1202]
+          ],
+          posTag: 'Adverb'
+        },
+        Yamaya: {
+          meaning: [
+            ['anak dewa', 87, 214]
+          ],
+          posTag: 'Verb'
+        }
       }
     }
   }
@@ -184,6 +197,13 @@ export default {
 // the reason is that this scss trying to style
 // inside component of component defined here
 <style lang="scss">
+  .q-field {
+    @media only screen and (max-width: 720px) {
+      width: 100% !important;
+      height: 100% !important;
+    }
+  }
+
   .input-text-sanskrit {
     .q-field__inner {
       .q-field__control {
@@ -194,6 +214,11 @@ export default {
         border-bottom-right-radius: 0px !important;
 
         border-right: 1px solid silver;
+
+        @media only screen and (max-width: 720px) {
+          border-right: none;
+          border-bottom: 1px solid silver;
+        }
         textarea {
           resize: none;
         }
@@ -225,6 +250,18 @@ export default {
 
 // scoped styling
 <style lang="scss" scoped>
+  @media only screen and (max-width: 720px) {
+      .small-justify-center {
+          justify-content: center;
+          margin-bottom: 8px !important;
+      }
+
+      .small-fit {
+        width: 100% !important;
+        height: 100% !important;
+      }
+  }
+
   .q-card-actions-translate {
     padding: 0 !important;
   }
