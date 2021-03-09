@@ -24,7 +24,8 @@ module.exports = function (/* ctx */) {
       // accepting hex value for color properties
 
       'color-operations',
-      'percentage-colors'
+      'percentage-colors',
+      'axios'
     ],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css

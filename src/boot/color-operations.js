@@ -1,6 +1,6 @@
 // import something here
 import Vue from 'vue'
-import colorOps from '@local-utilities/color-ops'
+import colorOps from '../@local-utilities/color-ops'
 import * as tf from '@tensorflow/tfjs'
 
 tf.setBackend('webgl')

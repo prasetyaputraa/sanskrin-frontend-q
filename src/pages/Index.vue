@@ -3,6 +3,7 @@
     <div class="q-pa-lg fit row justify-center items-start q-col-gutter-sm">
       <div class="col-xs-12 col-md-6 flex fit" style="padding: 0">
         <q-card flat bordered class="my-card fit">
+        <form @submit.prevent="requestTranslation">
           <q-card-section style="padding-top: 2em">
             <div class="gutter-sm row justify-center">
               <q-input borderless type="textarea" class="col-md-6 col-sm-12 input-text-sanskrit" v-model="inputText" label="Kalimat dalam Sansekerta..." />
@@ -13,8 +14,14 @@
           <!-- <q-separator /> -->
 
           <q-card-actions class="q-card-actions-translate" align="center">
-            <q-btn flat padding="1em" class="fit" color="primary">Terjemahkan</q-btn>
+            <q-btn type="submit" flat padding="1em" class="fit" color="primary" :loading="submitting">
+              <template v-slot:loading>
+                <q-spinner-cube/>
+              </template>
+              Terjemahkan
+            </q-btn>
           </q-card-actions>
+        </form>
         </q-card>
       </div>
       <div class="col-xs-12 col-md-6 flex fit">
@@ -25,50 +32,67 @@
 
     <div class="q-pa-lg fit row items-start q-col-gutter-sm">
       <q-list bordered class="rounded-borders col-xs-12 col-lg-6">
-        <div class="row fit justify-between items-center">
-          <div class="col-md-6">
-            <div class="row fit justify-start">
-              <h6 style="margin: 1em 1em 1em 1em">Distribusi Semantik</h6>
+        <q-tabs
+          v-model="tab"
+          dense
+          class="text-grey"
+          active-color="primary"
+          indicator-color="primary"
+          align="justify"
+          narrow-indicator
+        >
+          <q-tab name="statistical" label="Statistical" />
+          <q-tab name="by sentences" label="By Sentences" />
+        </q-tabs>
+        <q-tab-panels v-model="tab" animated>
+          <q-tab-panel name="statistical">
+          <div class="row fit justify-between items-center">
+            <div class="col-md-6">
+              <div class="row fit justify-start">
+                <h6 style="margin: 1em 1em 1em 1em">Distribusi Semantik</h6>
+              </div>
+            </div>
+            <div class="col-md-6 small-fit">
+              <div class="row fit justify-end q-gutter-xs small-justify-center">
+                <q-btn-toggle unelevated no-caps style="border: 1px solid silver !important"
+                  v-model="percentOccurenceToggle"
+                  @input="handlePercentOccurenceToggle"
+                  toggle-color="primary"
+                  color="white"
+                  text-color="primary"
+                  :options="[
+                    {label: '# okurensi', value: 'occurence'},
+                    {label: '% persentase', value: 'percentage'}
+                  ]"
+                />
+                <q-btn unelevated style="border: 1px solid silver !important"
+                  :ripple="false"
+                  size="md"
+                  color="white"
+                  text-color="primary"
+                  :icon="collapseIcon"
+                  class="right-button-in-distribution"
+
+                  @click="handleCollapseOrExpandAll"
+                >
+                  <q-tooltip content-class="silver">Collapse/Expand All</q-tooltip>
+                </q-btn>
+              </div>
             </div>
           </div>
-          <div class="col-md-6 small-fit">
-            <div class="row fit justify-end q-gutter-xs small-justify-center">
-              <q-btn-toggle unelevated no-caps style="border: 1px solid silver !important"
-                v-model="percentOccurenceToggle"
-                @input="handlePercentOccurenceToggle"
-                toggle-color="primary"
-                color="white"
-                text-color="primary"
-                :options="[
-                  {label: '# okurensi', value: 'occurence'},
-                  {label: '% persentase', value: 'percentage'}
-                ]"
-              />
-              <q-btn unelevated style="border: 1px solid silver !important"
-                :ripple="false"
-                size="md"
-                color="white"
-                text-color="primary"
-                :icon="collapseIcon"
-                class="right-button-in-distribution"
+          <ExpansionItemForSanskrit
+            ref="collapsible"
 
-                @click="handleCollapseOrExpandAll"
-              >
-                <q-tooltip content-class="silver">Collapse/Expand All</q-tooltip>
-              </q-btn>
-            </div>
-          </div>
-        </div>
-        <ExpansionItemForSanskrit
-          ref="collapsible"
+            v-for="word in Object.keys(sanskritWords)"
+            :key="word"
+            :word="word"
+            :wordChipData="{'sanskritWords': sanskritWords}"
 
-          v-for="word in Object.keys(sanskritWords)"
-          :key="word"
-          :word="word"
-          :wordChipData="{'sanskritWords': sanskritWords}"
+            @input="handleExpansionItemForSanskritToggle"
+          />
+          </q-tab-panel>
 
-          @input="handleExpansionItemForSanskritToggle"
-        />
+        </q-tab-panels>
       </q-list>
     </div>
 
@@ -95,6 +119,41 @@ export default {
       }
 
       return true
+    },
+
+    requestTranslation: function () {
+      if (this.inputText === '') {
+        return
+      }
+
+      const words = this.inputText.split(' ')
+
+      if (words.length === 1) {
+        this.submitting = true
+
+        const word = this.inputText.trim()
+
+        this.$axios
+          .get(`/translate/word/?word=${word}`)
+          .then((response) => {
+            console.log(response)
+            this.sanskritWords = response.data.translation
+            this.submitting = false
+          })
+      } else {
+        this.submitting = true
+
+        const sentence = this.inputText.trim()
+
+        this.$axios
+          .post('/translate/sentences/', {
+            sentence: sentence
+          }).then((response) => {
+            console.log(response)
+            this.sanskritWords = response.data.translations
+            this.submitting = false
+          })
+      }
     },
 
     handlePercentOccurenceToggle: function (value) {
@@ -143,6 +202,8 @@ export default {
 
   data: () => {
     return {
+      submitting: false,
+      tab: 'statistical',
       percentOccurenceToggle: 'percentage',
       collapseIcon: 'expand_less',
       inputText: '',
