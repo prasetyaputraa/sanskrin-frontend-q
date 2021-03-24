@@ -41,7 +41,7 @@
       </q-list>
     </q-drawer>
 
-    <q-page-container>
+    <q-page-container class="main-background">
       <router-view />
     </q-page-container>
   </q-layout>
@@ -82,3 +82,6 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+</style>
