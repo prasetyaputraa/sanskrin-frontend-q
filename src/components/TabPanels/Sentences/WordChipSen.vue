@@ -16,7 +16,6 @@ export default {
 
   props: {
     translation: String,
-    group: Array,
     sanskritIndex: Number,
     index: Number,
     wordSpanIndex: Number
@@ -32,7 +31,8 @@ export default {
 
   methods: {
     checkIfOtherIsSelected: function () {
-      this.$emit('can-i-be-selected', this)
+      console.log('Coordinate', this.coordinate)
+      // this.$emit('can-i-be-selected', this)
     },
 
     proceedSelection: function (coordinateToBeReplaced = null) {
@@ -49,13 +49,10 @@ export default {
       })
 
       this.$emit('get-selected', this)
-
-      this.$emit('pass-coordinate', { old: coordinateToBeReplaced, new: this.coordinate })
     }
   },
 
   created: function () {
-    this.group.push(this)
     this.coordinate = [this.wordSpanIndex, this.sanskritIndex, this.index]
   },
 

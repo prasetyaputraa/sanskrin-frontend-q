@@ -46,10 +46,6 @@ export default {
     background-color: indianred;
   }
 
-  .bytrans.hovered {
-    background-color: indianred !important;
-  }
-
   .clicked {
     background-color: yellow;
   }

@@ -1,5 +1,5 @@
 <template>
-  <q-tab-panel :name="name" ref="alpha" @click="clickEvent">
+  <q-tab-panel :name="name" ref="alpha">
     <div style="font-size: 2em;">
       <WordSpan v-for="i in sentences.split(' ').length" :key="i" ref="wordInPar" :word="sentences.split(' ')[i - 1]" v-on:word-clicked="activateTranslationDivOnRow" :index="i - 1"/>
     </div>
@@ -42,23 +42,6 @@ export default {
       }
     },
 
-    highlightLinkedWordSpanByIndex: function (index) {
-      this.$refs.wordInPar.forEach((wip) => {
-        if (parseInt(index) !== parseInt(wip.index)) {
-          wip.isHighlightedByTransalation = false
-          return
-        }
-
-        wip.isHighlightedByTransalation = true
-      })
-    },
-
-    unhighlightAllLinkedWordSpan: function () {
-      this.$refs.wordInPar.forEach((wip) => {
-        wip.isHighlightedByTransalation = false
-      })
-    },
-
     activateTranslationDivOnRow: function (wordInPar) {
       const row = wordInPar.row
       let activeTranslationDiv = null
@@ -71,12 +54,11 @@ export default {
         inLoopWordInPar.clicked = false
       })
 
+      console.log('TRANSLATION DIVS ARE:', this.translationDivs)
+
       this.translationDivs.forEach((translationDiv) => {
         if (row === translationDiv.row) {
           activeTranslationDiv = translationDiv
-          activeTranslationDiv.key = wordInPar.index
-          activeTranslationDiv.$forceUpdate()
-          activeTranslationDiv.isManualTranslated = false
           activeTranslationDiv.show()
 
           return
@@ -86,6 +68,8 @@ export default {
       })
 
       this.changeActiveWord(wordInPar.word)
+
+      console.log('TranslationToShow:', this.translationsToShow)
 
       activeTranslationDiv.wordSpanIndex = wordInPar.index
 
@@ -102,9 +86,6 @@ export default {
       this.activeWord = word
 
       this.$emit('active-word-changed', word)
-    },
-
-    clickEvent: function (whatever) {
     },
 
     createTranslationDiv: function (lastInLineWordInPar) {
@@ -136,6 +117,8 @@ export default {
 
         this.translationDivs.push(translationDiv)
       })
+
+      console.log('Translation DIVS created.')
     },
 
     sendWCSToTranslationBuilder: function (data) {

@@ -1,10 +1,7 @@
 <template>
   <q-card flat bordered class="col-5 rounded-borders q-pa-lg text-white bg-primary" style="min-height: 150px" @mouseleave="hoverOut">
-    <draggable :list="list" @start="drag=true" @end="drag=false" ghost-class="ghost" drag-class="move-drag" @change="log" ref="draggable">
+    <draggable :list="list" @start="drag=true" @end="drag=false" ghost-class="ghost" drag-class="move-drag">
       <WordSpan v-for="item in list" :__data="item" :key="item.wordSpanIndex" :translation="item.translation"
-        @hovered-up="findHoveredWordSpanInOtherPanel"
-        @add-new-phrase="addNewPhrase"
-        @change-to-new-phrase="changeToNewPhrase"
       />
     </draggable>
   </q-card>
@@ -23,7 +20,11 @@ export default {
   },
 
   props: {
-    list: Array
+    builtTranslationsMap: Map
+  },
+
+  computed: {
+
   },
 
   methods: {
@@ -53,6 +54,10 @@ export default {
           wordSpan.updateData(data)
         }
       })
+    },
+
+    setList: function (list) {
+      this.list = list
     }
   },
 

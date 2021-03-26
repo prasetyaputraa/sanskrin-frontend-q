@@ -81,7 +81,6 @@ export default {
     },
 
     changeToManualTrans: function () {
-      console.log('SHOULD BE RUNNING I SHOULD NOT I?')
       this.mainEditable = false
       const newCoordinate = [this.wordSpanIndex, -1, -1]
 
